@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class ApplicationManager : SingletonBehaviour<ApplicationManager>
 {
@@ -10,11 +11,14 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
     public float countdownQuestion;
     public bool isIngame;
     public float prepareCountdown;
-	#endregion
+    public int quizIndex;
+    public int quizQuantity;
+    //public List<Quiz> quizList;
+    #endregion
 
-	#region PrivateParameter
+    #region PrivateParameter
 
-	private bool objCreate = false;
+    private bool objCreate = false;
 
     #endregion
 
@@ -25,24 +29,26 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
     }
 
     private void OnDisable()
-	{
+    {
         EventManager.OnStatusChange -= OnStatusChange;
-	}
+    }
 
-	void Start ()
-	{
-		if (!objCreate)
+    void Start()
+    {
+        if (!objCreate)
         {
-			objCreate = true;
-			_instance = this;
-			DontDestroyOnLoad(instance);
+            objCreate = true;
+            _instance = this;
+            DontDestroyOnLoad(instance);
             ResetParameter();
+            InitQuestion();
             EventManager.instance.ChangeStatus(EventManager.EventStatus.OnGamePrepare);
         }
-        else {
-			DestroyImmediate (gameObject);
-		}
-	}
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -75,7 +81,7 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
             prepareCountdown -= Time.deltaTime;
         }
     }
-	#endregion
+    #endregion
 
     #region PublicMethod
 
@@ -83,21 +89,31 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
     #endregion
 
     #region PrivateMethod
-        private void ResetParameter()
+
+    private void InitQuestion()
+    {
+        
+    }
+
+    private void ResetParameter()
     {
         actualScore = 0;
         countdownQuestion = 1f;
         isIngame = false;
         prepareCountdown = 3f;
+        quizIndex = 0;
     }
 
-    private void ResetGamecountdown(){
+    private void ResetGamecountdown()
+    {
         countdownQuestion = 1f;
+        EventManager.instance.ChangeStatus(EventManager.EventStatus.OnQuizTimeout);
     }
 
     private void OnStatusChange(EventManager.EventStatus message)
     {
-        switch(message){
+        switch (message)
+        {
             case EventManager.EventStatus.ResetGameCountDown:
                 ResetGamecountdown();
                 break;
@@ -110,13 +126,25 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
             case EventManager.EventStatus.OnGameEnd:
                 OnGameEnd();
                 break;
+            case EventManager.EventStatus.OnQuizTimeout:
+                OnQuizTimeout();
+                break;
+        }
+    }
+
+    private void OnQuizTimeout()
+    {
+        if (quizIndex < quizQuantity)
+        {
+            quizIndex += 1;
+        }else{
+            quizIndex = 0;
         }
     }
 
     private void OnGamePrepare()
     {
-        prepareCountdown = 3f;
-        isIngame = false;   
+        ResetParameter();
     }
 
     private void OnGameEnd()
@@ -132,3 +160,6 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
     #endregion
 
 }
+
+
+

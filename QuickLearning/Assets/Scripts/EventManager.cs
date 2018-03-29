@@ -10,6 +10,7 @@ public class EventManager : SingletonBehaviour<EventManager>
         ResetGameCountDown,
         OnGamePrepare,
         OnGameStart,
+        OnQuizTimeout,
         OnGameEnd
     }
 #endregion
