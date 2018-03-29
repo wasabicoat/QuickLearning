@@ -1,49 +1,134 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class ApplicationManager : SingletonBehaviour<ApplicationManager>
 {
 
-	#region PublicParameter
-
-
+    #region PublicParameter
+    public int actualScore;
+    public float countdownQuestion;
+    public bool isIngame;
+    public float prepareCountdown;
 	#endregion
 
 	#region PrivateParameter
 
 	private bool objCreate = false;
 
-	#endregion
+    #endregion
 
-	#region LifeCycle
+    #region LifeCycle
+    private void OnEnable()
+    {
+        EventManager.OnStatusChange += OnStatusChange;
+    }
 
-	// Use this for initialization
+    private void OnDisable()
+	{
+        EventManager.OnStatusChange -= OnStatusChange;
+	}
+
 	void Start ()
 	{
-		if (!objCreate) {
+		if (!objCreate)
+        {
 			objCreate = true;
 			_instance = this;
-			DontDestroyOnLoad (instance);
-		} else {
+			DontDestroyOnLoad(instance);
+            ResetParameter();
+            EventManager.instance.ChangeStatus(EventManager.EventStatus.OnGamePrepare);
+        }
+        else {
 			DestroyImmediate (gameObject);
 		}
 	}
 
-	// Update is called once per frame
-	void Update ()
-	{
-		#if UNITY_EDITOR
-		if (Input.GetKeyDown (KeyCode.R)) {
-			PlayerPrefs.DeleteAll ();
-		}
-		#endif
-	}
+    // Update is called once per frame
+    void Update()
+    {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPrefs.DeleteAll();
+        }
+#endif
 
+        if (isIngame)
+        {
+            if (countdownQuestion < 0)
+            {
+                EventManager.instance.ChangeStatus(EventManager.EventStatus.ResetGameCountDown);
+            }
+            else
+            {
+                countdownQuestion -= Time.deltaTime;
+            }
+
+        }
+        else if (prepareCountdown < 0 && !isIngame)
+        {
+            EventManager.instance.ChangeStatus(EventManager.EventStatus.OnGameStart);
+        }
+        else
+        {
+            prepareCountdown -= Time.deltaTime;
+        }
+    }
 	#endregion
 
-	#region PublicMethod
+    #region PublicMethod
 
 
-	#endregion
+    #endregion
+
+    #region PrivateMethod
+        private void ResetParameter()
+    {
+        actualScore = 0;
+        countdownQuestion = 1f;
+        isIngame = false;
+        prepareCountdown = 3f;
+    }
+
+    private void ResetGamecountdown(){
+        countdownQuestion = 1f;
+    }
+
+    private void OnStatusChange(EventManager.EventStatus message)
+    {
+        switch(message){
+            case EventManager.EventStatus.ResetGameCountDown:
+                ResetGamecountdown();
+                break;
+            case EventManager.EventStatus.OnGamePrepare:
+                OnGamePrepare();
+                break;
+            case EventManager.EventStatus.OnGameStart:
+                OnGameStart();
+                break;
+            case EventManager.EventStatus.OnGameEnd:
+                OnGameEnd();
+                break;
+        }
+    }
+
+    private void OnGamePrepare()
+    {
+        prepareCountdown = 3f;
+        isIngame = false;   
+    }
+
+    private void OnGameEnd()
+    {
+        isIngame = false;
+    }
+
+    private void OnGameStart()
+    {
+        isIngame = true;
+    }
+
+    #endregion
 
 }

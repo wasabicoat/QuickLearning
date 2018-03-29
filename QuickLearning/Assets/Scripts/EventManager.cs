@@ -4,11 +4,21 @@ using System.Collections;
 public class EventManager : SingletonBehaviour<EventManager>
 {
 
-	#region Parameter
+    #region Enum
+    public enum EventStatus{
+        Idle,
+        ResetGameCountDown,
+        OnGamePrepare,
+        OnGameStart,
+        OnGameEnd
+    }
+#endregion
 
-	private static bool objCreated = false;
+    #region Parameter
 
-	public delegate void StatusChange (string message);
+    private static bool objCreated = false;
+
+    public delegate void StatusChange(EventStatus message);
 
 	public static event StatusChange OnStatusChange;
 
@@ -26,26 +36,16 @@ public class EventManager : SingletonBehaviour<EventManager>
 			DestroyImmediate (gameObject);
 		}
 	}
-	// Use this for initialization
-	void Start ()
-	{
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
 
 	#endregion
 
 	#region GameMethod
 
-	public void ChangeStatus (string message)
+    public void ChangeStatus (EventStatus status)
 	{
+        Debug.Log(status.ToString());
 		if (OnStatusChange != null)
-			OnStatusChange (message);
+            OnStatusChange (status);
 	}
 
 	#endregion

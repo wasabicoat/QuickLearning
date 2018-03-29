@@ -7,7 +7,8 @@ public class GUIController : SingletonBehaviour<GUIController>
 
 	#region Panel
 
-	public GameObject panelDebugLog;
+    public GameObject panelDebugLog;
+    public GameObject panelQuickTutorial;
 
 	#endregion
 
@@ -65,7 +66,7 @@ public class GUIController : SingletonBehaviour<GUIController>
 
 	void DisableAll ()
 	{
-		
+        panelQuickTutorial.SetActive(false);
 	}
 
 	#endregion

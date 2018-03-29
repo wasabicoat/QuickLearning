@@ -334,6 +334,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\PanelQuickTutorialManager.cs" />
     <Compile Include="Assets\Scripts\ApplicationManager.cs" />
     <Compile Include="Assets\Scripts\DebugLog.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
