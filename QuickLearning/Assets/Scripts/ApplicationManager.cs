@@ -64,7 +64,9 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
         {
             if (countdownQuestion < 0)
             {
-                EventManager.instance.ChangeStatus(EventManager.EventStatus.ResetGameCountDown);
+                //EventManager.instance.ChangeStatus(EventManager.EventStatus.ResetGameCountDown);
+
+                EventManager.instance.ChangeStatus(EventManager.EventStatus.OnQuizTimesUp);
             }
             else
             {
@@ -92,7 +94,7 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
 
     private void InitQuestion()
     {
-        
+
     }
 
     private void ResetParameter()
@@ -107,7 +109,7 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
     private void ResetGamecountdown()
     {
         countdownQuestion = 1f;
-        EventManager.instance.ChangeStatus(EventManager.EventStatus.OnQuizTimeout);
+        //EventManager.instance.ChangeStatus(EventManager.EventStatus.OnQuizTimesUp);
     }
 
     private void OnStatusChange(EventManager.EventStatus message)
@@ -126,7 +128,7 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
             case EventManager.EventStatus.OnGameEnd:
                 OnGameEnd();
                 break;
-            case EventManager.EventStatus.OnQuizTimeout:
+            case EventManager.EventStatus.OnQuizTimesUp:
                 OnQuizTimeout();
                 break;
         }
@@ -134,12 +136,15 @@ public class ApplicationManager : SingletonBehaviour<ApplicationManager>
 
     private void OnQuizTimeout()
     {
-        if (quizIndex < quizQuantity)
+        if (quizIndex + 1 < quizQuantity)
         {
             quizIndex += 1;
-        }else{
+        }
+        else
+        {
             quizIndex = 0;
         }
+        EventManager.instance.ChangeStatus(EventManager.EventStatus.ResetGameCountDown);
     }
 
     private void OnGamePrepare()

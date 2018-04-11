@@ -49,7 +49,7 @@ public class PanelQuickTutorialManager : MonoBehaviour
             case EventManager.EventStatus.OnGameStart:
                 SetQuizByIndex(ApplicationManager.instance.quizIndex);
                 break;
-            case EventManager.EventStatus.OnQuizTimeout:
+            case EventManager.EventStatus.OnQuizTimesUp:
                 StartCoroutine(OnQuizTimeout(0.01f));
                 break;
         }
@@ -58,6 +58,7 @@ public class PanelQuickTutorialManager : MonoBehaviour
     IEnumerator OnQuizTimeout(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
+        EventManager.instance.ChangeStatus(EventManager.EventStatus.PlayAnswerSound);
         SetQuizByIndex(ApplicationManager.instance.quizIndex);
     }
 

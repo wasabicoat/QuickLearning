@@ -1,11 +1,15 @@
-{"result":[
-  {
-    "Question": "What's your surname?",
-    "Answer": "คุณนามสกุลอะไร"
-  },
-  {
-    "Question": "How do you spell that?",
-    "Answer": "สะกดอย่างไร"
-  }
-]
-}
+{"result":[{
+            "Question": "What's your surname?",
+            "Answer": "คุณนามสกุลอะไร",
+            "CorrectSoundName": "CollectCoinSOUNDEffect",
+            "CorrectSoundLink": "http://bangbuathong.thddns.net:5652/QuickLearning/CollectCoinSOUNDEffect.mp3",
+            "CorrectSoundType": "mp3"
+          },
+          {
+            "Question": "How do you spell that?",
+            "Answer": "สะกดอย่างไร",
+            "CorrectSoundName": "CollectCoinSOUNDEffect",
+            "CorrectSoundLink": "http://bangbuathong.thddns.net:5652/QuickLearning/CollectCoinSOUNDEffect.mp3",
+            "CorrectSoundType": "mp3"
+          }
+],"status":1}

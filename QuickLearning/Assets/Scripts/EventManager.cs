@@ -7,10 +7,11 @@ public class EventManager : SingletonBehaviour<EventManager>
     #region Enum
     public enum EventStatus{
         Idle,
-        ResetGameCountDown,
         OnGamePrepare,
         OnGameStart,
-        OnQuizTimeout,
+        OnQuizTimesUp,
+        PlayAnswerSound,
+        ResetGameCountDown,
         OnGameEnd
     }
 #endregion

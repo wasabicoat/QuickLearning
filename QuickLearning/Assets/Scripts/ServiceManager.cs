@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 
@@ -46,22 +47,44 @@ public class ServiceManager : SingletonBehaviour<ServiceManager>
 
         var rootQuiz = JsonUtility.FromJson<QuizList>(text);
         ApplicationManager.instance.quizQuantity = rootQuiz.result.Count;
+        StartCoroutine(DownloadAllFile(rootQuiz));
         return rootQuiz;
     }
 
+    private IEnumerator DownloadAllFile(QuizList rootQuiz)
+    {
+        foreach (var quiz in rootQuiz.result)
+        {
+            if (File.Exists(Application.dataPath + "/StreamingAssets/" +
+                            quiz.CorrectSoundName +
+                           "." +
+                            quiz.CorrectSoundType))
+            {
+                yield return null;
+                Debug.Log("File is exist");
+            }
+            else
+            {
+                WWW www = new WWW(quiz.CorrectSoundLink);
+                yield return www;
+                File.WriteAllBytes(Application.dataPath + "/StreamingAssets/" +
+                                             quiz.CorrectSoundName +
+                                             "." +
+                                             quiz.CorrectSoundType, www.bytes);
+            }
+        }
+    }
     #endregion
-
     #region PrivateMethod
     private void OnStatusChange(EventManager.EventStatus message)
     {
-        switch (message)
-        {
-            case EventManager.EventStatus.ResetGameCountDown:
-                break;
-            
-        }
+        //switch (message)        
+        //{        
+        //    case EventManager.EventStatus.ResetGameCountDown:        
+        //        break;                    
+        //}    
     }
-#endregion
+    #endregion
 
     #region JsonClass
 
@@ -70,6 +93,9 @@ public class ServiceManager : SingletonBehaviour<ServiceManager>
     {
         public string Question;
         public string Answer;
+        public string CorrectSoundName;
+        public string CorrectSoundLink;
+        public string CorrectSoundType;
     }
 
     [Serializable]
